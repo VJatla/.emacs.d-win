@@ -1,0 +1,2 @@
+* Windows configuration of =.emacs.d=
+hi
