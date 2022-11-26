@@ -5,6 +5,7 @@ I am trying to move to /lsp-mode/ when using emacs in windows.
   :init
   (setq lsp-keymap-prefix "C-c l")
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (lsp-mode . lsp-enable-which-key-integration))
+	 (python-mode . lsp)
+	 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 #+end_src

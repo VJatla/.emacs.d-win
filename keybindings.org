@@ -1,0 +1,322 @@
+* Packages
+  In additon to the packages installed here, the commands also depend
+  on the following packages, smartparens, ...
+  #+begin_src emacs-lisp
+    ;; Ryo
+    (use-package ryo-modal
+      :commands ryo-modal-mode
+      )
+    (push '((nil . "ryo:.*:") . (nil . "")) which-key-replacement-alist)
+    (setq ryo-modal-cursor-type 'box)
+    (setq ryo-modal-cursor-color "Yellow")
+    (setq-default cursor-type 'bar)
+    (set-cursor-color "#ffffff") 
+    (add-hook 'text-mode-hook 'ryo-modal-mode)
+    (add-hook 'prog-mode-hook 'ryo-modal-mode)
+    ;; Key-chord
+    (use-package key-chord
+      :config
+      (setq key-chord-two-keys-delay 0.1)
+      (key-chord-mode 1))
+
+    ;; expand region (for selections)
+    (use-package expand-region
+      :config)    
+      #+end_src
+* Functions
+** Buffer
+#+begin_src emacs-lisp
+;; Disable themes
+(defun disable-all-themes ()
+  "disable all active themes."
+  (dolist (i custom-enabled-themes)
+    (disable-theme i)))
+
+
+  (defun set-theme ()
+    (interactive)
+(disable-all-themes)
+(customize-themes)
+)
+
+
+  (defun insert-space ()
+    (interactive)
+    (insert " "))
+
+  (defun insert-4-space ()
+    (interactive)
+    (insert "    "))
+
+
+  ;; query-replace current symbol
+  (defun replace-symbol (replace-str)
+    (interactive "sDo query-replace current word with: ")
+    (sp-forward-symbol)
+    (let ((end (point)))
+      (sp-backward-symbol)
+      (kill-ring-save (point) end)
+      (query-replace (current-kill 0) replace-str) ))
+
+
+
+  ;; Find markded region using swiper
+  (defun swiper-region ()
+    "Use current region if active for swiper search"
+    (interactive)
+    (if (use-region-p)
+        (swiper (format "%s" (buffer-substring (region-beginning) (region-end))))
+      (swiper)))
+
+  ;; Replace word under cursor
+  (defun replace-cur-word (replace-str)
+    (interactive "sDo query-replace current word with: ")
+    (forward-word)
+    (let ((end (point)))
+      (backward-word)
+      (kill-ring-save (point) end)
+      (query-replace (current-kill 0) replace-str) ))
+
+  ;; Kill all other buffers
+  (defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+#+end_src
+** Reload init file
+#+begin_src emacs-lisp
+  (defun reload-init ()
+    (interactive)
+    (load-file "~/.emacs.d/init.el"))
+#+end_src
+** Unpop
+#+begin_src emacs-lisp
+(defun unpop-to-mark-command ()
+  "Unpop off mark ring. Does nothing if mark ring is empty."
+  (interactive)
+      (when mark-ring
+        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+        (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+        (when (null (mark t)) (ding))
+        (setq mark-ring (nbutlast mark-ring))
+        (goto-char (marker-position (car (last mark-ring))))))
+#+end_src
+* Switching modes
+#+begin_src emacs-lisp
+  (defun ryo-exit-save ()
+    (interactive)
+    (ryo-modal-mode)
+    (save-buffer))
+  (global-set-key (kbd "C-e") 'ryo-modal-mode)
+  (global-set-key (kbd "C-t") 'vterm-toggle)
+  (ryo-modal-keys
+   ("e" ryo-modal-mode))
+#+end_src
+* Global Keybindings
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-i") 'windmove-up)
+  (global-set-key (kbd "M-k") 'windmove-down)
+  (global-set-key (kbd "M-j") 'windmove-left)
+  (global-set-key (kbd "M-l") 'windmove-right)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+#+end_src
+* Modalka keybindings
+** Buffer movements
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("i" previous-line)
+   ("k" next-line)
+   ("j" backward-char)
+   ("l" forward-char)
+   ("u" backward-word)
+   ("o" forward-word)
+
+   ("h" beginning-of-line)
+   (";" end-of-line)
+
+   ("L" forward-paragraph)
+   ("J" backward-paragraph)
+
+
+   ("I" beginning-of-buffer)
+   ("K" end-of-buffer)
+
+
+   ("n" goto-line)
+
+   ("p" avy-pop-mark)
+   ("P" unpop-to-mark-command)
+
+   )
+   #+end_src
+** Buffer editing
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("C" comment-or-uncomment-region)
+   ("8" undo)
+   ("4" insert-4-space)
+   ("," delete-backward-char))
+#+end_src
+** Copy/paste
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("x" kill-region)
+   ("y" kill-ring-save))
+  (ryo-modal-key "v" 'yank :then '(save-buffer) :name "paste-and-save")
+  (ryo-modal-key "SPC y" 'beginning-of-line :then '(set-mark-command end-of-line kill-ring-save)  :name "copy-whole-line")
+#+end_src
+** Buffer selection
+#+begin_src emacs-lisp
+  (ryo-modal-key "m m" 'beginning-of-line :then '(set-mark-command end-of-line)  :name "mark-whole-line")
+  (ryo-modal-key "m (" 'er/mark-inside-pairs  :name "mark-inside-pairs")
+  (ryo-modal-key "m q" 'er/mark-inside-quotes  :name "mark-inside-quote")
+  (ryo-modal-key "m L" 'set-mark-command :then '(forward-paragraph) :name "mark-paragraph")
+  (ryo-modal-key "m J" 'set-mark-command :then '(backward-paragraph) :name "mark-paragraph")
+  (ryo-modal-key "m B" 'beginning-of-buffer :then '(set-mark-command end-of-buffer) :name "mark-whole-buffer")
+  (ryo-modal-key "m j" 'set-mark-command :then '(backward-char) :name "mark-char-backward")
+  (ryo-modal-key "m k" 'set-mark-command :then '(next-line) :name "mark-char-backward")
+  (ryo-modal-key "m i" 'set-mark-command :then '(previous-line) :name "mark-char-backward")
+  (ryo-modal-key "m l" 'set-mark-command :then '(forward-char) :name "mark-char-forward")
+  (ryo-modal-key "m o" 'set-mark-command :then '(forward-word) :name "mark-word")
+  (ryo-modal-key "m u" 'set-mark-command :then '(backward-word) :name "mark-word-backward")
+  (ryo-modal-key "m K" 'set-mark-command :then '(end-of-buffer) :name "mark-till-buffer-end")
+  (ryo-modal-key "m I" 'set-mark-command :then '(beginning-of-buffer)  :name "mark-till-buffer-end")
+  (ryo-modal-key "m h" 'set-mark-command :then '(beginning-of-line) :name "mark-line")
+  (ryo-modal-key "m ;" 'set-mark-command :then '(end-of-line) :name "mark-line")
+  (ryo-modal-key "m s" 'er/mark-symbol :name "mark-symbol")
+#+end_src
+** Rectangle mode
+#+begin_src emacs-lisp
+  (ryo-modal-key "R m" 'rectangle-mark-mode  :name "rectangle-mark-mode")
+  (ryo-modal-key "R i" 'iedit-rectangle-mode  :name "iedit-rectangle-mode")
+#+end_src
+** Change commands
+#+begin_src emacs-lisp
+  (ryo-modal-key "c o" 'set-mark-command :then '(forward-word kill-region ryo-modal-mode) :name "change word forward")
+  (ryo-modal-key "c s" 'er/mark-symbol-with-prefix :then '(kill-region ryo-modal-mode) :name "change symbol")
+  (ryo-modal-key "c u" 'set-mark-command :then '(backward-word kill-region ryo-modal-mode) :name "change word backward")
+  (ryo-modal-key "c q" 'er/mark-inside-quotes :then '(kill-region ryo-modal-mode) :name "change in quotes")
+  (ryo-modal-key "c (" 'er/mark-inside-pairs  :then '(kill-region ryo-modal-mode) :name "change in parenthesis")
+  (ryo-modal-key "c p" 'counsel-projectile-switch-project :name "Switch project")
+#+end_src
+** Delete buffer commands
+#+begin_src emacs-lisp
+  (ryo-modal-key "d SPC l" 'kill-line :name "Delete till end")
+  (ryo-modal-key "d d" 'kill-whole-line :name "Delete whole line")
+  (ryo-modal-key "d o" 'set-mark-command :then '(forward-word kill-region) :name "delete word forward")
+  (ryo-modal-key "d s" 'er/mark-symbol-with-prefix :then '(kill-region) :name "delete symbol")
+  (ryo-modal-key "d u" 'set-mark-command :then '(backward-word kill-region) :name "delete word backward")
+  (ryo-modal-key "d q" 'er/mark-inside-quotes :then '(kill-region) :name "delete in quotes")
+  (ryo-modal-key "d (" 'er/mark-inside-pairs  :then '(kill-region) :name "change in parenthesis")
+#+end_src
+** Buffer search/replace
+#+begin_src emacs-lisp
+  (ryo-modal-keys
+   ("rr" query-replace)
+   ("rw" replace-cur-word)
+   ("rs" replace-symbol))
+  (ryo-modal-keys
+   ("s" swiper-region)
+   ("@" highlight-symbol-at-point)
+   ("2" highlight-symbol-next)
+   ("*" swiper-isearch-thing-at-point)) 
+#+end_src
+** Windows
+#+begin_src emacs-lisp
+  (ryo-modal-key
+   "w" '(("j" windmove-left)
+	 ("h" windmove-left)
+	 ("l" windmove-right)
+	 (";" windmove-right)
+	 ("i" windmove-up)
+	 ("k" windmove-down)
+	 ("d" delete-window)
+
+	 ("D" delete-other-windows)
+	 ("s v" split-window-vertically)
+	 ("s h" split-window-horizontally)
+	 ))
+#+end_src
+** Buffer oepen, close, change, etc
+#+begin_src emacs-lisp
+  (ryo-modal-key "M-b" 'ace-jump-buffer :name "ace-jump-buffer2")
+  (ryo-modal-key
+   "b" '(("b" ace-jump-buffer)
+	 ("s" save-buffer)
+	 ("k" kill-this-buffer)
+	 ("K" kill-other-buffers)
+	 ("S" save-some-buffers)
+	 ("j" previous-buffer)
+	 ("l" next-buffer)
+	 ("t" set-theme)
+
+
+	 ))
+  (ryo-modal-key
+   "b o" '(
+	   ("f" counsel-fzf)
+	   ("o" counsel-find-file)
+	   ("r" counsel-recentf)
+	   ("m" counsel-bookmark)
+	   ("p" counsel-projectile-find-file)
+	   ))
+#+end_src
+** Tools
+#+begin_src emacs-lisp
+  (ryo-modal-key
+   "SPC m" '(("t" treemacs)
+	     ("g" magit-status)
+	     ("q" save-buffers-kill-terminal)
+	     ("8" reload-init)
+	     ("|" display-fill-column-indicator-mode)
+	     ("a" org-agenda)
+	     ("G" golden-ratio-mode)
+	     ))
+#+end_src
+* Treemacs
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :bind(:map treemacs-mode-map
+	       ("w" . other-window)
+	       ("SPC m t" . treemacs)
+	       ("SPC m a" . org-agenda)
+	       ("i" . treemacs-previous-line)
+	       ("I" . beginning-of-buffer)
+	       ("k" . treemacs-next-line)
+	       ("K" . end-of-buffer)))
+#+end_src
+* Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :bind(:map dashboard-mode-map
+	       ("M-j" . windmove-left)
+	       ("M-l" . windmove-right)
+	       ("A" . org-agenda)
+	       ("SPC m t" . treemacs)
+	       ("SPC m a" . org-agenda)
+	       ("w" . other-window)
+	       ("i" . dashboard-previous-line)
+	       ("k" . dashboard-next-line)))
+#+end_src
+* org-agenda-mode
+#+begin_src emacs-lisp
+  (add-hook 'org-agenda-mode-hook
+	    (lambda ()
+	      (local-set-key (kbd "M-b") 'ace-jump-buffer)
+	      (local-set-key (kbd "i") 'org-agenda-previous-line)
+	      (local-set-key (kbd "i") 'org-agenda-previous-line)
+	      (local-set-key (kbd "k") 'org-agenda-next-line)
+	      (local-set-key (kbd "M-j") 'windmove-left)
+	      (local-set-key (kbd "M-l") 'windmove-right)))
+#+end_src
+* Markdown
+The following are markdown keybindings.
+| Mode   | Keybinding | Function                   |
+|--------+------------+----------------------------|
+| Normal | SPC c t    | Markdown table of contents |
+|        |            |                            |
+#+begin_src emacs-lisp
+  (ryo-modal-major-mode-keys
+   'markdown-mode
+   ("SPC t" markdown-toc-generate-or-refresh-toc))
+#+end_src

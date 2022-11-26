@@ -4,15 +4,15 @@ Some of the packages I will be adding are, Treemacs, Which Key, and dashboard.
 ** treemacs
 #+begin_src emacs-lisp
   (use-package treemacs
-    :defer t
-    :bind(:map treemacs-mode-map
-	       ("w" . other-window)
-	       ("SPC m t" . treemacs)
-	       ("SPC m a" . org-agenda)
-	       ("i" . treemacs-previous-line)
-	       ("I" . beginning-of-buffer)
-	       ("k" . treemacs-next-line)
-	       ("K" . end-of-buffer)))
+    :config
+    (setq treemacs-python-executable "C:/Users/vj/anaconda3/envs/haq/python.exe"))
+#+end_src
+** projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+end_src
 ** magit
 #+begin_src emacs-lisp
@@ -24,7 +24,6 @@ Some of the packages I will be adding are, Treemacs, Which Key, and dashboard.
     :config
     (which-key-mode))
 #+end_src
-
 ** all the fonts
 #+begin_src emacs-lisp
   (use-package all-the-icons
@@ -33,7 +32,68 @@ Some of the packages I will be adding are, Treemacs, Which Key, and dashboard.
 ** Dashboard
 #+begin_src emacs-lisp
   (use-package dashboard
-  :ensure t
   :config
   (dashboard-setup-startup-hook))
+#+end_src
+** Company
+#+begin_src emacs-lisp
+  (use-package company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+#+end_src
+** smex
+#+begin_src emacs-lisp
+  (use-package smex
+  :config
+  (smex-initialize))
+#+end_src
+** ivy
+#+begin_src emacs-lisp
+  (use-package ivy
+  :ensure t
+  :config
+  (ivy-mode 1)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  )
+#+end_src
+** ivy-avy
+#+begin_src emacs-lisp
+  (use-package ivy-avy)
+#+end_src
+** swiper
+search and find
+#+begin_src emacs-lisp
+  (use-package swiper
+  :defer t)
+(use-package counsel)
+#+end_src
+** counsel-projectile
+#+begin_src emacs-lisp
+  (use-package counsel-projectile)
+#+end_src
+** highlight-symbol
+#+begin_src emacs-lisp
+  (use-package highlight-symbol)
+(add-hook 'prog-mode-hook 'highlight-symbol-mode)
+#+end_src
+** ace-window
+#+begin_src emacs-lisp
+  (use-package ace-window)
+#+end_src
+** ace-jump-buffer
+#+begin_src emacs-lisp
+  (use-package ace-jump-buffer)
+#+end_src
+** iedit
+#+begin_src emacs-lisp
+  (use-package iedit)
+#+end_src
+** golden-ratio-mode
+#+begin_src emacs-lisp
+  (use-package golden-ratio)
 #+end_src

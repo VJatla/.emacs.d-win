@@ -15,3 +15,27 @@ The default color theme for Nimbus is /spacemacs-dark/.
   :defer t
   :init (load-theme 'spacemacs-dark t))
 #+end_src
+** Base settings
+These settings does not require external packages.
+*** Inhibiting not so useful GUI elements
+  #+begin_src emacs-lisp
+    (setq inhibit-startup-screen t)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
+  #+end_src
+*** Use visual bell instead of audio.
+  #+begin_src emacs-lisp
+    (setq visible-bell 1)
+  #+end_src
+*** Keep temporary files in one directory
+  #+begin_src emacs-lisp
+    (setq backup-directory-alist
+	  `((".*" . ,temporary-file-directory)))
+    (setq auto-save-file-name-transforms
+	  `((".*" ,temporary-file-directory t)))
+  #+end_src
+*** Load files when they are changed on disk
+  #+begin_src emacs-lisp
+    (global-auto-revert-mode t)
+  #+end_src
