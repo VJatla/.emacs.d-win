@@ -1,0 +1,3 @@
+* Package installer
+Here I set up /use-package/ and /straight/ to install packages. The packages are installed
+on demand.

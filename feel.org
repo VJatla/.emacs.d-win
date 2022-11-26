@@ -1,0 +1,39 @@
+* Feel
+In this configuration I will be attempting to have packages and settings that make emacs useful for me.
+Some of the packages I will be adding are, Treemacs, Which Key, and dashboard.
+** treemacs
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :defer t
+    :bind(:map treemacs-mode-map
+	       ("w" . other-window)
+	       ("SPC m t" . treemacs)
+	       ("SPC m a" . org-agenda)
+	       ("i" . treemacs-previous-line)
+	       ("I" . beginning-of-buffer)
+	       ("k" . treemacs-next-line)
+	       ("K" . end-of-buffer)))
+#+end_src
+** magit
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
+** which-key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :config
+    (which-key-mode))
+#+end_src
+
+** all the fonts
+#+begin_src emacs-lisp
+  (use-package all-the-icons
+  :if (display-graphic-p))
+#+end_src
+** Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+#+end_src

@@ -1,2 +1,19 @@
 * Windows configuration of =.emacs.d=
-hi
+** Introduction
+The following configuration works in windows system. The configurations are
+specifically designed to work with local user **vj**.
+** =.emacs.d= symlink
+Depending on how emacs is installed in the syste, =.emacs.d= is loaded from
+either =/C:\Users\vj\.emacs.d= or =C:\Users\vj\AppData\Roaming\.emacs.d=.
+#+begin_src powershell
+  MKLINK /J Link Target
+  
+  Link    Specifies the new symbolic link name.
+  
+  Target  Specifies the path (relative or absolute) that the new link
+          refers to.
+#+end_src
+** Configuration files
+I use literate configurations. This helps me to take notes and easily browse
+through them in =gihub=.
+

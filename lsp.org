@@ -1,0 +1,10 @@
+* lsp-mode
+I am trying to move to /lsp-mode/ when using emacs in windows.
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+#+end_src
