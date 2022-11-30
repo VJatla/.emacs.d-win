@@ -9,3 +9,9 @@ I am trying to move to /lsp-mode/ when using emacs in windows.
 	 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 #+end_src
+
+* Configuration
+#+begin_src emacs-lisp
+  ;; no real time syntax check
+  (setq lsp-diagnostics-provider :none)
+#+end_src

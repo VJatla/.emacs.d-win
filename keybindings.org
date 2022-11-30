@@ -320,3 +320,16 @@ The following are markdown keybindings.
    'markdown-mode
    ("SPC t" markdown-toc-generate-or-refresh-toc))
 #+end_src
+* Python
+#+begin_src emacs-lisp
+  (defun vj-insert-breakpoint ()
+    (interactive)
+    (insert "import pdb; pdb.set_trace()")
+    (indent-for-tab-command)
+    )
+  (ryo-modal-major-mode-keys
+   'python-mode
+   ("SPC b" vj-insert-breakpoint)
+   ("SPC d" lsp-find-definition)
+   )
+#+end_src

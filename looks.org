@@ -4,16 +4,16 @@ Fonts, UI elements and color themes.
 For windows the safest font is /Cascadia Mono/ at /14/.
 #+begin_src emacs-lisp
   (add-to-list 'default-frame-alist
-               '(font . "Cascadia Mono-14"))
+	       '(font . "Cascadia Mono-14"))
 #+end_src
 ** Color theme
 For different systems I would like to have different color themes.
 *** Nimbus
-The default color theme for Nimbus is /spacemacs-dark/.
+The default color theme for Nimbus is /Darcula/.
 #+begin_src emacs-lisp
   (use-package spacemacs-theme
-  :defer t
-  :init (load-theme 'spacemacs-dark t))
+    :defer t
+    :init (load-theme 'spacemacs-dark t))
 #+end_src
 ** Base settings
 These settings does not require external packages.
