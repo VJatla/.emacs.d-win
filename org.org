@@ -1,5 +1,8 @@
 * roam
 #+begin_src emacs-lisp
+ ;; db location for windows
+  (setq org-roam-db-location "~/Dropbox/org-roam/org-roam-win.db")
+  
   (use-package org-roam
     :ensure t
     :init
@@ -20,4 +23,6 @@
 			      "#+title: ${title}\n") :unnarrowed t)
 	  )
 	)
+
+ 
 #+end_src
