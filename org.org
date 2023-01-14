@@ -1,3 +1,7 @@
+* Org version mismatch fix
+#+begin_src emacs-lisp
+(use-package org :straight (:type built-in))
+#+end_src
 * roam
 #+begin_src emacs-lisp
  ;; db location for windows
