@@ -154,6 +154,7 @@
   (ryo-modal-keys
    ("C" comment-or-uncomment-region)
    ("8" undo)
+   ("a a" align-current)
    ("4" insert-4-space)
    ("," delete-backward-char))
 #+end_src
