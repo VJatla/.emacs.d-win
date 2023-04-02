@@ -14,5 +14,5 @@ user =Path= user variable.
     (add-to-list 'lsp-enabled-clients 'jedi)))
   (setq lsp-jedi-workspace-extra-paths
   (vconcat lsp-jedi-workspace-extra-paths
-	   ["C:/Users/vj/anaconda3/envs/haq/Lib/site-packages"]))
+	   ["c:/Users/VJ-UNM/anaconda3/envs/haq/Lib/site-packages"]))
 #+end_src

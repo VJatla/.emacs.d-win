@@ -4,7 +4,7 @@ Fonts, UI elements and color themes.
 For windows the safest font is /Cascadia Mono/ at /14/.
 #+begin_src emacs-lisp
   (add-to-list 'default-frame-alist
-	       '(font . "JetBrains Mono-12"))
+	       '(font . "JetBrains Mono-16"))
 #+end_src
 ** Color theme
 For different systems I would like to have different color themes.

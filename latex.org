@@ -1,0 +1,51 @@
+* AUCTEX
+  #+begin_src emacs-lisp
+    (use-package auctex
+      :defer t)
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil)
+  #+end_src
+* company-auctex
+#+begin_src emacs-lisp
+  (use-package company-auctex)
+  (company-auctex-init)
+#+end_src
+* Use LaTex as default compilation
+#+begin_src emacs-lisp
+  (setq TeX-command-force "LaTex")  
+#+end_src
+* RefTex
+#+begin_src emacs-lisp
+  (reftex-mode 1)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex) 
+#+end_src
+* Tex fold mode
+#+begin_src emacs-lisp
+(add-hook 'LaTeX-mode-hook (lambda ()
+                             (TeX-fold-mode 1)))
+#+end_src
+* Sumatra PDF
+#+begin_src emacs-lisp
+  (setq TeX-PDF-mode t)
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-method 'synctex)
+  (setq TeX-view-program-list
+     '(("Sumatra PDF" ("\"SumatraPDF.exe\" -reuse-instance"
+			(mode-io-correlate " -forward-search %b %n ") " %o"))))
+
+  (eval-after-load 'tex
+    '(progn
+       (assq-delete-all 'output-pdf TeX-view-program-selection)
+       (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+  (server-start)
+#+end_src
+* Keybindings
+#+begin_src emacs-lisp
+  (require 'tex)
+  (ryo-modal-major-mode-keys
+   'tex-mode
+   ("SPC SPC" TeX-command-run-all)
+   ("SPC r t" reftex-toc )
+   )
+#+end_src

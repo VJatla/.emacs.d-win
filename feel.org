@@ -5,7 +5,7 @@ Some of the packages I will be adding are, Treemacs, Which Key, and dashboard.
 #+begin_src emacs-lisp
   (use-package treemacs
     :config
-    (setq treemacs-python-executable "C:/Users/vj/anaconda3/envs/haq/python.exe"))
+    (setq treemacs-python-executable "C:/Users/VJ-UNM/anaconda3/envs/haq/python.exe"))
 #+end_src
 ** projectile
 #+begin_src emacs-lisp
